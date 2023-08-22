@@ -1,0 +1,167 @@
+How I think about all these options:
+1. There is increasing complexity when you go from simplilearn lab environment to other cloud notebook providers (colab, kaggle) to local install to containerized.
+2. Level up in complexity when you start experiencing the pain for which the next level of complexity solves for.  
+
+
+# Installing Locally
+## Checklist
+1. You have Python3 (pick your favorite flavor in 3 like 3.9 or 3.10) on your machine: 
+	- installation: https://www.python.org/downloads/
+	- check your installed, default version: 
+		- linux / Mac OS / windows
+		```python --version```
+		-- ** Special note: if your computer is older, you might have multiple pythons (2 and 3) and default might be at two.  You can try this:
+		```python3 --version```
+
+2. Check if you have pip
+	- Install ANY python package with pip
+	- Windows installation of pip: https://www.geeksforgeeks.org/how-to-install-pip-on-windows/
+
+3. Install ANY package with Pip
+
+	- pip will install the package to DEFAULT python.  
+
+	```pip install jupyterlab```
+
+	- if your python version 3 is found at ```python3``` then you can install packages to python3 with:
+
+	```pip3 install jupyterlab```
+
+4. A quick work on VirtualEnv:
+	- **The problem it's trying to solve**:
+		- When you have a lot of coding projects on one computer, sometimes they require different versions of different libraries.  
+		- Sometimes these version will conflict on your machine, but YOU NEED BOTH OF THEM TO RUN FOR YOUR PROJECTS!
+	- ** Why virtual envs?**
+		- Virtual envs create independent python environments for your python project in a way that you can control with code (bash).  
+			- when you activate a virtual env (usually when you enter the folder), the ```pip install <PACKAGE>``` command will install your packages in that folder and not at the global machine level.
+	- ** Python Virtual Env Options **
+		- venv
+		- poetry
+	- Downsides:
+		- Your machine gets bogged down with multiple installs of the same package very often
+			- sure, Project A and Project B needed a different version of Library C.  BUT they also needed the SAME version of Librarys G - F.  
+			- Because of virtual envs, your computer has installed Library G-F at least 2 times to support Project A and B.  And it probably installed it at the global level that time you were playing with pip.
+		- The developer experience requires a lot to remember
+			- It takes a command to turn on the virtual environment when you want.
+			- it takes a command to turn off the virtual environment when you want.
+			- Managing all these commands and associating them with other actions is made nicer with a Makefile at the project level, 
+				- but then somebody has to maintain that Makefile, or bash script, or whatever it is.
+	- some article to read more: https://realpython.com/python-virtual-environments-a-primer/
+
+
+4. Why I (AMY) don't use Anaconda for package control:
+	- It is greedy with its defaults, and sometimes I want options.
+	- When you want to move off anaconda, it's such a pain to get it off your computer
+	- I personally find pip easier to use.
+	- AMY'S ADVICE: Use the tool that's easier for you.  Pip is easier for me.  Anaconda might be easier for you! 
+
+5. A quick conversation on IDEs (that thing you write code in, could be a text editor, could be a word doc, could be Virtual Studio):
+	- PyCharm: https://www.jetbrains.com/pycharm/ 
+		- Probably the most popular IDE for python.
+		- It's supported by JetBrains which in general does a good job making IDEs 
+		- It defaults to making virtual environments for each new project which means: the packages you installed globally on your machine ARE NOT at the project level for projects created by pyCharm
+			- when you use PyCharm, you probably can change the default behavior to NOT create a virtual env every time a new project is made.  
+			- But if you don't change that behavior, you accept the **downsides** in #4 above.
+	- Vim: https://www.vim.org/
+		- for the most hardcore of you all, I don't know how you do it.
+	- Sublime: https://www.sublimetext.com/
+		- Barebones and free.
+		- Makes no assumptions about virtual environments
+		- I (AMY) use Sublime because I find it to be really light weight (it's responsive and fast) and I don't use my IDE for fancy things when I should.
+		- Downsides: it's not python specific out of the box, so if you want to do fancy python things you'll have to look at the plugin ecosystem 
+	- Virtual Studio: https://visualstudio.microsoft.com/
+		- Seems to be the most popular IDE.  
+			- has cool features like code introspection. 
+
+## Upsides with the local install
+1. Optimal resource utilization (you are running on your machine with no other software like virtual environments inbetween your chip and the code!)
+2. Easier to manage when you only have a couple of projects. 
+	- Why bother with all that virtual environment nonesense when you only have a handful of projects that use the same libraries?
+
+## Downsides with the local install 
+1. You can seriously bork your shell environment (looking at YOU ANACONDA!)
+2. When you have a lot of different projects that are bogging down your system.  Yeah you can solve that with virtual environments but there's pain with virtual envs too.
+
+
+# Virtual Machines:
+
+Virtual machines make isolated virtual computers on your computer or some other computer.  You can have multiple of these tiny little computers running on your 1 computer.  
+
+Back when I (AMY) was first learning how to dev, I remember partitioning my computer between windows and linux so I could have both environments on my computer.  It failed, and I had to wipe my computer and run Ubuntu because I couldn't figure out how to get Windows back.  Extremely risky, had a lot of downsides.  And you could only do it for maybe 2 operating systems.  
+
+Virtual Machines solve this problem, by allowing developers the ability to develop on ANY machine on their computer without having to partition things, violate licenses, etc.
+
+## A quick word on VirtualBox: https://www.virtualbox.org/
+1. It was really popular 10 years ago, and might still be with mobile developers who need to test programs on different phone environments but don't want to by all those phones.
+2. It's basically dead now (sorry to all of you who love it) for software development.  
+	- I think it's still popular for mobile app developers.
+
+# Docker : https://www.docker.com/
+## Why docker?
+1. Docker took the idea of a virtual machine and called it a "container".
+2. Containers DO have a smaller footprint (how much CPU/memory is used to run them) than VirtualBox
+	- You can run many containers on your laptop but maybe only 1 or 2 virtualbox machines at the same time. 
+3. Developers can control what's happening in a container with code.
+	- Can control installs (like pip installs), versioning, all of that with code.
+	- no need to memorize bash commands!
+4. Modern Deployment Architectures (services architecture) use containers as their base.  Working in containers means it's easy to handoff the project to a platform team for deployment.
+	- kubernetes
+	- Service Mesh 
+
+## Downsides
+1. CPU usage.  Running Docker with multiple containers on your computer will make the fan whirl and your computer sad if it doesn't have a lot of power.
+	- combine that with zoom and chrome and your computer may crash.  Make sure your laptop is sufficiently powered!
+	- I (Amy) am on a Mac Pro, 1.6 GHz-6 Core Intel chip, 16 GB RAM.  My Mac doesn't slow down with docker + zoom + chrome.
+2. Whatever happens in the container stays in the container unless otherwise specified.  
+	- Go to "Adding Volumes" for more on this.
+3. You trade python virtual environment complexity for container complexity.  
+	- For me this is worth it because working with containers is a transferrable skill to other software engineering / development whereas working with python virtual environments is only useful in python oriented engineering teams.  
+
+## Final note: It doesn't have to be Docker.  RedHat has containers, other vendors have containers and they all are built on each other and work fairly interchangeably.
+
+## Install Docker: https://docs.docker.com/desktop/?_gl=1*k1rza*_ga*Mjc1MjM0NzIuMTY5MTUwNTgwOQ..*_ga_XJWPQMJYHQ*MTY5MTUwNTgwOS4xLjEuMTY5MTUwNjE2MS41OS4wLjA.
+
+	- I recommend installing Docker by installing Docker Desktop. It's just easier. Sure you don't need Docker Desktop.  But, make your life easy.
+
+## Docker + Docker Compose
+
+Docker compose allows you to quicklky spin up spin down a lot of containers with just 1 command.  Here is a list of jupyterlab based containers + docker-compose files that you can play with.  
+
+My recommendation is try them until you find one that works.  Don't spend too much time debugging errors, until all of them fail.
+
+How I made this list: I went on github, and searched "jupyterlab docker compose".  I'm listing the repos that look correct, but I haven't personally checked them.
+
+1. https://github.com/alexini-mv/docker-jupyterlab
+2. https://github.com/kyo1/docker-compose-jupyterlab
+3. https://github.com/jinykim68/docker-jupyterlab
+4. https://github.com/maybeetree/jupyterlab-docker
+
+### Adding Volumes to the docker-compose.
+
+You can link a container to a real folder on your computer by setting "volumes" in the docker-compose yml file.  This will look like this:
+```
+some-service-name-whatever-the-repo-calls-this:
+    restart: unless-stopped
+    build: .
+    ports:
+      - 8888:8888
+    volumes:
+      - ./<NAME OF FOLDER ON YOUR PHYSICAL MACHINE>:/home/jupy/workdir
+```
+
+** Use volumes for the important stuff like .ipynb files because then they will always exist on your computer and will not disappear when you clean your containers** 
+
+More documentation: https://devopscell.com/docker/docker-compose/volumes/2018/01/16/volumes-in-docker-compose.html
+
+
+## Basic Docker / Docker COmpose commands / setting up
+1. git clone one of the repos above
+2. Getting docker up and running: Turn on Docker Desktop, wait for green.
+3. cd into the folder that is the git clone.
+3. Run `docker-compose up` 
+4. wait for a little, watch Docker Desktop to see when containers are ready.
+5. Check on containers with 'docker ls -a'.  If there's an error, the container will not exist.  
+6. Follow instructions in the github repo to find where jupyter labs is.  NORMALLY it's on http://localhost:8888/lab or http://localhost:8888
+8. **To tear down** : ```docker-compose down ```
+
+
