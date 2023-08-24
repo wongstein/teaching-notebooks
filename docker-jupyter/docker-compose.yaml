@@ -1,0 +1,11 @@
+version: '3'
+services:
+  jupyter:
+    build: 
+      dockerfile: ./Dockerfile
+      context: .
+    volumes:
+      - ./:/home/notebook
+    ports:
+      - 8888:8888
+    command: "start-notebook.sh --NotebookApp.token="

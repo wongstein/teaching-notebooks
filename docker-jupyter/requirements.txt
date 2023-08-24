@@ -1,0 +1,18 @@
+# basic list of packages for machine learning / data science
+
+## add more here
+
+huggingface
+imbalanced-learn
+keras
+langchain
+matplotlib
+numpy
+openai
+pandas
+scikit-learn
+scipy
+seaborn
+tensorflow
+torch
+torchvision
