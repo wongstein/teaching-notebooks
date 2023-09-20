@@ -5,7 +5,7 @@ services:
       dockerfile: ./Dockerfile
       context: .
     volumes:
-      - ../programming_notebooks:/home/notebook
+      - ../:/home/notebook
     ports:
       - 8888:8888
     command: "start-notebook.sh --NotebookApp.token="
